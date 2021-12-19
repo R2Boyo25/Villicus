@@ -1,0 +1,10 @@
+{
+    "user": "R2Boyo25",
+    "repo": "ProgMan",
+    "binname": "programman",
+    "installScript": ".avalon/gen.py",
+    "mvBinAfterInstallScript": true,
+    "toCopy": [
+        "all"
+    ]
+}
