@@ -153,20 +153,27 @@ def reloadAll():
 
 @app.route("/status")
 def jsonStatus():
-    running = 0
-    for proc in procs.dct.keys():
-        prc = procs.proc(proc)
-        if prc.running:
-            running += 1
-    
-    runningpercent = running / len(procs.dct.keys())
-    crashedpercent = 1-runningpercent
+    if len(procs.dct.keys()) > 0:
+        running = 0
+        for proc in procs.dct.keys():
+            prc = procs.proc(proc)
+            if prc.running:
+                running += 1
+        
+        runningpercent = running / len(procs.dct.keys())
+        crashedpercent = 1-runningpercent
 
-    return json.dumps({
-        "running": f"{round(runningpercent*100)}%",
-        "paused": "0%",
-        "killed": f"{round(crashedpercent*100)}%"
-    })
+        return json.dumps({
+            "running": f"{round(runningpercent*100)}%",
+            "paused": "0%",
+            "killed": f"{round(crashedpercent*100)}%"
+        })
+    else:
+        return json.dumps({
+            "running": "0%",
+            "paused": "0%",
+            "killed": "100%"
+        })
 
 @app.route('/')
 def home():
