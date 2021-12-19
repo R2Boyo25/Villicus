@@ -35,7 +35,6 @@ class Proc:
         if "env" in proc:
             for var in proc['env'].keys():
                 self.env[var] = proc['env'][var]
-        print(command)
 
         self.process = subprocess.Popen(command, stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, cwd = workdir, env = self.env, shell = True)
 
@@ -89,7 +88,6 @@ procs = Procs()
 configfile = os.path.expanduser("~/.config/programmanager.toml")
 
 def loadConfig():
-    print(toml.load(configfile))
     return toml.load(configfile)
 
 def saveConfig(newconfig):
@@ -188,4 +186,4 @@ def returnSourceFile(filename):
 
 if __name__ == '__main__':
     start()
-    app.run(host = '0.0.0.0', port = 4057, debug = True)
+    app.run(host = '0.0.0.0', port = 4057)
