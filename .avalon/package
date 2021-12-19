@@ -1,5 +1,5 @@
 {
-    "user": "R2Boyo25",
+    "author": "R2Boyo25",
     "repo": "ProgMan",
     "binname": "programman",
     "installScript": ".avalon/gen.py",
