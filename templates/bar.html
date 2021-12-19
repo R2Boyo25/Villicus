@@ -1,0 +1,60 @@
+<html>
+    <head>
+        <link href="/source/bar.css" rel="stylesheet" media="screen">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Program Manager</title>
+        {% block head %}
+        {% endblock %}
+    </head>
+    <body>
+        <div class="topbar">
+            <div class="miniBarProgress" style="width: 80%; background-color: darkgreen;" align = center>80%</div>
+            <div class="miniBarProgress" style="width: 0%; background-color: darkorange;" align = center>5%</div>
+            <div class="miniBarProgress" style="width: 20%; background-color: darkred;" align = center>15%</div>
+        </div>
+
+        <div class="sidebar">
+            <a href="/"><img src = "/source/home.svg"/></a>
+            <a href="/list"><img src = "/source/details.svg"/></a>
+            <a href="/list/new"><img src = "/source/details-add.svg"/></a>
+            <a href="/reload"><img src="/source/reload.svg"></a>
+            {% block sidebuttons %}
+            {% endblock %}
+        </div>
+
+        <div class="main">
+            {% block body %}
+            {% endblock %}
+        </div>
+
+        <script>
+            function httpGet(theUrl)
+            {
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+                xmlHttp.send( null );
+                return xmlHttp.responseText;
+            }
+
+            function updateBars() {
+                var x = document.getElementsByClassName("miniBarProgress");
+                var i;
+
+                var j = JSON.parse(httpGet("/status"))
+
+                var e = [j.running, j.paused, j.killed];
+                for (i = 0; i < x.length; i++) {
+                    x[i].innerHTML = e[i];
+                    x[i].style.width = x[i].innerHTML;
+                }
+            }
+
+            function update() {
+                updateBars();
+            }
+
+            update();
+            var t = setInterval(update, 5000);
+        </script>
+    </body>
+</html>

@@ -1,0 +1,20 @@
+{% extends "bar.html" %}
+{% block head %}
+    <link href="/source/table.css" rel="stylesheet" media="screen">
+{% endblock %}
+{% block body %}
+    <table align = center>
+            <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th width=auto>Controls</th>
+            </tr>
+        {% for proc in procs %}
+            <tr>
+                <td><a href = "/proc/{{proc[1]}}">{{ proc[1] }}</a></td>
+                <td>{{ "Not Running" if not proc[0] else "Running" }}</td>
+                <td><a href = /start/{{proc[1]}} ><img src = "/source/play.svg"/></a></td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
