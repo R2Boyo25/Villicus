@@ -5,6 +5,7 @@ import os
 import subprocess
 from fcntl import fcntl, F_GETFL, F_SETFL
 from os import O_NONBLOCK, read
+import signal
 
 app = Flask('ProgramManager')
 
@@ -16,6 +17,7 @@ class Proc:
         self.dct = dct
         self.process = None
         self.env = os.environ.copy()
+        self.paused = False
         if "start" in self.dct:
             if self.dct["start"]:
                 self.start()
@@ -63,10 +65,13 @@ class Proc:
     
     @property
     def running(self):
-        if self.process is not None:
-            return self.process.poll() is None
+        if not self.paused:
+            if self.process is not None:
+                return self.process.poll() is None
+            else:
+                return False
         else:
-            return False
+            return True
 
 
 class Procs:
@@ -139,6 +144,20 @@ def startProc(proc):
 
     return redirect("/proc/" + proc)
 
+@app.route("/pause/<proc>")
+def pauseProc(proc):
+    procs.proc(proc).paused = True
+    os.kill(procs.proc(proc).process.pid, signal.SIGSTOP)
+
+    return redirect("/proc/" + proc)
+
+@app.route("/unpause/<proc>")
+def unpauseProc(proc):
+    procs.proc(proc).paused = False
+    os.kill(procs.proc(proc).process.pid, signal.SIGCONT)
+
+    return redirect("/proc/" + proc)
+
 @app.route("/out/<proc>")
 def statTest(proc):
     return str(procs.proc(proc).out).replace("\n", "<br>\n")
@@ -155,17 +174,21 @@ def reloadAll():
 def jsonStatus():
     if len(procs.dct.keys()) > 0:
         running = 0
+        paused = 0
         for proc in procs.dct.keys():
             prc = procs.proc(proc)
-            if prc.running:
+            if prc.running and not prc.paused:
                 running += 1
+            if prc.paused:
+                paused += 1
         
         runningpercent = running / len(procs.dct.keys())
-        crashedpercent = 1-runningpercent
+        pausedpercent = paused / len(procs.dct.keys())
+        crashedpercent = 1-runningpercent-pausedpercent
 
         return json.dumps({
             "running": f"{round(runningpercent*100)}%",
-            "paused": "0%",
+            "paused": f"{round(pausedpercent*100)}%",
             "killed": f"{round(crashedpercent*100)}%"
         })
     else:
@@ -181,11 +204,11 @@ def home():
 
 @app.route("/list")
 def listProcs():
-    return render_template("list.html", procs = [[procs.dct[i].running, i] for i in procs.dct])
+    return render_template("list.html", procs = [[procs.dct[i].running, i, i.paused] for i in procs.dct])
 
 @app.route("/proc/<proc>")
 def procShow(proc):
-    return render_template("proc.html", proc = proc, procdata = procs.proc(proc).dct)
+    return render_template("proc.html", proc = proc, procdata = procs.proc(proc).dct, running = procs.proc(proc).running, paused = procs.proc(proc).paused)
 
 @app.route('/source/<path:filename>')
 def returnSourceFile(filename):

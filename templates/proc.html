@@ -67,7 +67,15 @@
 {% endblock %}
 
 {% block sidebuttons %}
-    <a href = "/start/{{proc}}"><img src="/source/play.svg"/></a>
-    <a href = "/restart/{{proc}}"><img src="/source/restart.svg"/></a>
-    <a href = "/kill/{{proc}}"><img src="/source/kill.svg"></a>
+    {% if running %}
+        <a href = "/restart/{{proc}}"><img src="/source/restart.svg"/></a>
+        <a href = "/kill/{{proc}}"><img src="/source/kill.svg"></a>
+        {% if paused %}
+            <a href = "/unpause/{{proc}}"><img src="/source/play.svg"></a>
+        {% else %}
+            <a href = "/pause/{{proc}}"><img src="/source/pause.svg"></a>
+        {% endif %}
+    {% else %}
+        <a href = "/start/{{proc}}"><img src="/source/play.svg"/></a>
+    {% endif %}
 {% endblock %}

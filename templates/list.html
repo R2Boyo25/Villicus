@@ -13,7 +13,14 @@
             <tr>
                 <td><a href = "/proc/{{proc[1]}}">{{ proc[1] }}</a></td>
                 <td>{{ "Not Running" if not proc[0] else "Running" }}</td>
-                <td><a href = /start/{{proc[1]}} ><img src = "/source/play.svg"/></a></td>
+                <td>
+                    {% if proc[0] %}
+                        <a href = "/restart/{{proc[1]}}"><img src="/source/restart.svg"/></a>
+                        <a href = "/kill/{{proc[1]}}"><img src="/source/kill.svg"></a>
+                    {% else %}
+                        <a href = /start/{{proc[1]}} ><img src = "/source/play.svg"/></a>
+                    {% endif %}
+                </td>
             </tr>
         {% endfor %}
     </table>
