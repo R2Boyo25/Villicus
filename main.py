@@ -204,7 +204,7 @@ def home():
 
 @app.route("/list")
 def listProcs():
-    return render_template("list.html", procs = [[procs.dct[i].running, i, i.paused] for i in procs.dct])
+    return render_template("list.html", procs = [[procs.dct[i].running, i, procs.dct[i].paused] for i in procs.dct])
 
 @app.route("/proc/<proc>")
 def procShow(proc):
