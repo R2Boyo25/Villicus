@@ -6,8 +6,13 @@ import subprocess
 from fcntl import fcntl, F_GETFL, F_SETFL
 from os import O_NONBLOCK, read
 import signal
+from datetime import datetime
 
 app = Flask('ProgramManager')
+configfile = os.path.expanduser("~/.config/programmanager.toml")
+configdir = os.path.expanduser("~/.config/programmanager/")
+
+LASTUPDATE = datetime(year = 1, month = 1, day = 1)
 
 cfg = {}
 
@@ -80,9 +85,11 @@ class Procs:
     
     def start(self, name, dct = None):
         if dct:
-            self.dct[name] = Proc(name, dct)
-    
+            if name in self.dct.keys():
+                if self.dct[name].running:
+                    self.dct[name].kill()
 
+            self.dct[name] = Proc(name, dct)
     
     def proc(self, name):
         return self.dct[name]
@@ -90,35 +97,73 @@ class Procs:
 
 procs = Procs()
 
-configfile = os.path.expanduser("~/.config/programmanager.toml")
+def listConfigFiles() -> list:
+    c = []
 
-def loadConfig():
-    return toml.load(configfile)
+    for root, dirs, files in os.walk(configdir):
+        for file in files:
+            c.append(root.rstrip("/") + "/" + file)
+    
+    return c
+
+def fname(path) -> str:
+    return path.split("/")[-1].replace(".toml", "")
+
+def changed() -> list:
+    global LASTUPDATE
+
+    c = []
+
+    for file in listConfigFiles():
+        if datetime.fromtimestamp(os.path.getmtime(file)) > LASTUPDATE:
+            c.append(fname(file))
+    LASTUPDATE = datetime.now()
+
+    return c
+
+def loadConfig() -> dict:
+    d = {}
+
+    for f in listConfigFiles():
+        d[fname(f)] = toml.load(f)
+
+    return d
 
 def saveConfig(newconfig):
-    toml.dump(newconfig, configfile)
-
+    for k in newconfig.keys():
+        with open(configdir + "/" + k + ".toml", "w") as pf:
+            toml.dump(newconfig[k], pf)
 
 def startProcs():
     global cfg
     global procs
 
     cfg = loadConfig()
+    chg = changed()
 
     for proc in cfg.keys():
-        if "start" not in proc:
-            procs.start(proc, cfg[proc])
-        else:
-            if proc["start"]:
+        if proc in chg:
+            print(f"Loading {proc}")
+            if "start" not in proc:
                 procs.start(proc, cfg[proc])
+            else:
+                if proc["start"]:
+                    procs.start(proc, cfg[proc])
 
 def start():
     global procs
-
-    if not os.path.exists(configfile):
-        with open(configfile, "w") as cf:
-            cf.write("\n")
     
+    if not os.path.exists(configdir):
+        os.mkdir(configdir)
+
+    if os.path.exists(configfile):
+        with open(configfile, "r") as cf:
+            a = toml.load(cf)
+        
+        saveConfig(a)
+
+        os.remove(configfile)
+
     startProcs()
 
 @app.route("/kill/<proc>")
@@ -164,8 +209,6 @@ def statTest(proc):
 
 @app.route("/reload")
 def reloadAll():
-    for proc in procs.dct:
-        procs.proc(proc).kill()
     start()
 
     return redirect("/list")
