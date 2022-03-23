@@ -38,13 +38,13 @@ class Proc:
             for var in proc['env'].keys():
                 self.env[var] = proc['env'][var]
 
-        self.process = subprocess.Popen(command, stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, cwd = workdir, env = self.env, shell = True)
+        self.process = subprocess.Popen(command, stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, cwd = workdir, env = self.env, shell = True, preexec_fn=os.setsid)
 
         flags = fcntl(self.process.stdout, F_GETFL)
         fcntl(self.process.stdout, F_SETFL, flags | O_NONBLOCK)
    
     def kill(self):
-        self.process.kill()
+        os.killpg(self.process.pid, signal.SIGTERM)
 
     @property
     def out(self):
