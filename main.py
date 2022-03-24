@@ -296,4 +296,4 @@ def returnSourceFile(filename):
 
 if __name__ == '__main__':
     start()
-    app.run(host = '0.0.0.0', port = 4057, debug = True)
+    app.run(host = '0.0.0.0', port = 4057)
