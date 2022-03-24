@@ -53,3 +53,7 @@
     left: 0rem;
     float: left;
 }
+
+.inline {
+  display: inline-block;
+}

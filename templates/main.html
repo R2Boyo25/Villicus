@@ -1,4 +1,97 @@
 {% extends "bar.html" %}
+{% block head %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
 {% block body %}
-    <p>eeeeeeee</p>
+    <div align = center style="margin-top: 5%;">
+        <div style="min-width:300px; max-width: 500px; height:auto;"><canvas id="memChart"></canvas></div><div style="min-width:300px; max-width: 500px; height:auto;"><canvas id="cpuChart"></canvas></div>
+    </div>
+
+    <script>   
+        const mconfig = {
+            type: 'doughnut',
+            data: {
+                labels: [
+                    "used",
+                    "shared",
+                    "buff/cache",
+                    "available"
+                ],
+                datasets: [
+                    {
+                        backgroundColor: [
+                            '#005C46',
+                            "#009B77",
+                            "#34AC90",
+                            '#00000000'
+                        ],
+                        data: [],
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Memory Usage'
+                    }
+                }
+            },
+        };
+        const cconfig = {
+            type: 'doughnut',
+            data: {
+                datasets: [
+                    {
+                        backgroundColor: [
+                            '#263855',
+                            '#00000000'
+                        ],
+                        data: [],
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'CPU Usage'
+                    }
+                }
+            },
+        };
+    </script>
+
+    <script>
+        const memChart = new Chart(
+            document.getElementById('memChart'),
+            mconfig
+        );
+        const cpuChart = new Chart(
+            document.getElementById('cpuChart'),
+            cconfig
+        );
+
+        function updateCharts() {
+            var x = document.getElementsByClassName("miniBarProgress");
+            var i;
+
+            var j = JSON.parse(httpGet("/stats"));
+            console.log(memChart.data.datasets[0].data);
+            memChart.data.datasets.forEach(dataset => {
+                dataset.data = j[0];
+            });
+            cpuChart.data.datasets.forEach(dataset => {
+                dataset.data = j[1];
+            });
+
+            cpuChart.update();
+            memChart.update();
+        }
+
+        updateCharts();
+        var t = setInterval(updateCharts, 1000);
+    </script>
 {% endblock %}

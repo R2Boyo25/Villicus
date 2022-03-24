@@ -22,11 +22,6 @@
             {% endblock %}
         </div>
 
-        <div class="main">
-            {% block body %}
-            {% endblock %}
-        </div>
-
         <script>
             function httpGet(theUrl)
             {
@@ -56,5 +51,10 @@
             update();
             var t = setInterval(update, 5000);
         </script>
+
+        <div class="main">
+            {% block body %}
+            {% endblock %}
+        </div>
     </body>
 </html>

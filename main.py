@@ -3,6 +3,8 @@ import toml
 import json
 import os
 import subprocess
+import logging
+import click
 from fcntl import fcntl, F_GETFL, F_SETFL
 from os import O_NONBLOCK, read
 import signal
@@ -11,6 +13,22 @@ from datetime import datetime
 app = Flask('ProgramManager')
 configfile = os.path.expanduser("~/.config/programmanager.toml")
 configdir = os.path.expanduser("~/.config/programmanager/")
+
+#### Disable Logging ####
+
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
+
+def secho(text, file=None, nl=None, err=None, color=None, **styles):
+    pass
+
+def echo(text, file=None, nl=None, err=None, color=None, **styles):
+    pass
+
+click.echo = echo
+click.secho = secho
+
+#### Disable Logging ####
 
 LASTUPDATE = datetime(year = 1, month = 1, day = 1)
 
@@ -166,6 +184,25 @@ def start():
 
     startProcs()
 
+def memUsage():
+    a = subprocess.check_output("free -m".split()).decode().split("\n")[1]
+
+    while "  " in a:
+        a = a.replace("  ", " ")
+    
+    ae = a.split()
+
+    return [int(e) for e in [ae[2], ae[4], ae[5], ae[6]]]
+
+def cpuUsage():
+    a = subprocess.check_output(["bash", "-c", "top -b -n1 | grep \"Cpu(s)\" | awk '{print $2+$4}'"]).decode().rstrip("\n")
+
+    return [float(a), 100 - float(a)]
+
+@app.route("/stats")
+def statusAPI():
+    return json.dumps([memUsage(), cpuUsage()])
+
 @app.route("/kill/<proc>")
 def killProc(proc):
     if proc in procs.dct.keys():
@@ -243,7 +280,7 @@ def jsonStatus():
 
 @app.route('/')
 def home():
-    return render_template('main.html')
+    return render_template('main.html', mem = str(memUsage()), cpu = str(cpuUsage()))
 
 @app.route("/list")
 def listProcs():
@@ -259,4 +296,4 @@ def returnSourceFile(filename):
 
 if __name__ == '__main__':
     start()
-    app.run(host = '0.0.0.0', port = 4057)
+    app.run(host = '0.0.0.0', port = 4057, debug = True)
