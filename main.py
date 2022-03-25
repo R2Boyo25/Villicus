@@ -82,7 +82,7 @@ class Proc:
             o += self.process.stdout.read().decode()
 
         if o.strip().strip("\n") != "":
-            self.curout.append(o) 
+            self.curout.append(o.strip("\n")) 
 
         return "\n".join(self.curout)
     
