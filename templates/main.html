@@ -85,7 +85,7 @@
             var i;
 
             var j = JSON.parse(httpGet("/stats"));
-            console.log(memChart.data.datasets[0].data);
+
             memChart.data.datasets.forEach(dataset => {
                 dataset.data = j[0];
             });
