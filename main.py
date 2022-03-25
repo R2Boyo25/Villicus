@@ -185,14 +185,23 @@ def start():
     startProcs()
 
 def memUsage():
-    a = subprocess.check_output("free -m".split()).decode().split("\n")[1]
+    aa = subprocess.check_output("free -m".split()).decode().split("\n")
+
+    a = aa[1]
 
     while "  " in a:
         a = a.replace("  ", " ")
     
     ae = a.split()
 
-    return [int(e) for e in [ae[2], ae[4], ae[5], ae[6]]]
+    af = aa[2]
+
+    while "  " in a:
+        af = af.replace("  ", " ")
+    
+    af = af.split()
+
+    return [int(e) for e in [ae[2], ae[4], ae[5], ae[6], af[2], af[3]]]
 
 def cpuUsage():
     a = subprocess.check_output(["bash", "-c", "top -b -n1 | grep \"Cpu(s)\" | awk '{print $2+$4}'"]).decode().rstrip("\n")

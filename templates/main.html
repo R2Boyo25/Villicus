@@ -8,14 +8,18 @@
     </div>
 
     <script>   
+        Chart.overrides['doughnut'].plugins.legend.display = false;
+
         const mconfig = {
             type: 'doughnut',
             data: {
                 labels: [
-                    "used",
-                    "shared",
-                    "buff/cache",
-                    "available"
+                    "Used",
+                    "Shared",
+                    "Buff/Cache",
+                    "Available",
+                    "Swap Used",
+                    "Swap Free"
                 ],
                 datasets: [
                     {
@@ -23,7 +27,9 @@
                             '#005C46',
                             "#009B77",
                             "#34AC90",
-                            '#00000000'
+                            '#00000000',
+                            '#7339ac',
+                            '#7339ac15'
                         ],
                         data: [],
                     }
