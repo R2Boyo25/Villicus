@@ -1,7 +1,9 @@
 # Program Manager
 
 Configuration files are stored in `~/.config/programmanager`
+
 Each program is a separate toml config file: `program_name.toml`
+
 The web interface it at port 4057.
 
 # Config Options
