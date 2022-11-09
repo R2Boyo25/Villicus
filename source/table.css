@@ -4,36 +4,45 @@ table {
     width: 90%;
     margin-top: 50px;
     table-layout: fixed;
-  }
-  
-  td, th {
+}
+
+td,
+th {
     border: 1px solid #b6b5b5;
     text-align: left;
     padding: 8px;
     width: 50%;
     word-wrap: break-word;
     max-height: 70vh;
-  }
+}
 
-  th {
+th {
     background-color: #f7f7f7;
-  }
-  
-  tr:nth-child(even) {
+}
+
+tr:nth-child(odd) {
     background-color: #dddddd;
-  }
+}
 
-  tr:nth-child(odd) {
+tr:nth-child(even) {
     background-color: #f3f3f3;
-  }
+}
 
-  #output {
+#output {
     max-width: 90%;
     max-height: 70vh;
     overflow-y: auto;
-  }
+}
 
-  img {
-      width: 25px;
-      height:25px
-  }
+img {
+    width: 25px;
+    height: 25px
+}
+
+.addItem {
+    margin-right: 5%;
+    margin-left: 5%;
+    width: 90%;
+    text-align: right;
+    display: none;
+}

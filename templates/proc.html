@@ -1,81 +1,96 @@
 {% extends "bar.html" %}
 {% block head %}
-    <link href="/source/table.css" rel="stylesheet" media="screen">
+<link href="/source/table.css" rel="stylesheet" media="screen">
 {% endblock %}
 
 {% block body %}
-    <table align = center>
-            <tr>
-                <th>Setting</th>
-                <th>Value</th>
-            </tr>
-        {% for var in procdata.keys() %}
-            {% if var != "env" %}
-                <tr>
-                    <td>{{ var }}</td>
-                    <td>{{ procdata[var] }}</td>
-                </tr>
-            {% endif %}
-        {% endfor %}
-    </table>
-
-    {% if "env" in procdata %}
-    <table align = center>
-            <tr>
-                <th>Evironment Variable</th>
-                <th>Value</th>
-            </tr>
-        {% for var in procdata["env"].keys() %}
-            <tr>
-                <td>{{ var }}</td>
-                <td>{{ procdata["env"][var] }}</td>
-            </tr>
-        {% endfor %}
-    </table>
+<table align=center>
+    <caption>Process Settings</caption>
+    <thead>
+        <th>Setting</th>
+        <th>Value</th>
+    </thead>
+    {% for var in procdata.keys() %}
+    {% if var != "env" %}
+    <tr>
+        <td>{{ var }}</td>
+        <td>{{ procdata[var] }}</td>
+    </tr>
     {% endif %}
-    
-    <table align = center>
-        <tr>
-            <th>
-                Output
-            </th>
-        </tr>
-        <tr>
-            <td id = "output">
-            </td>
-        </tr>
-    </table>
+    {% endfor %}
+</table>
+<span class="addItem">+</span>
 
-    <script>
-        function httpGet(theUrl)
-        {
-            var xmlHttp = new XMLHttpRequest();
-            xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
-            xmlHttp.send( null );
-            return xmlHttp.responseText;
-        }
+{% if not running %}
+<table align=center>
+    <caption>Output Data</caption>
+    <thead>
+        <th>Key</th>
+        <th>Value</th>
+    </thead>
+    <tr>
+        <td>Return Code</td>
+        <td>{{returncode}}</td>
+    </tr>
+</table>
+{% endif %}
 
-        function updateOutput() {
-            var x = document.getElementById("output");
-            var e = httpGet("/out/{{proc}}");
-            x.innerHTML = e;
-        }
+{% if "env" in procdata %}
+<table align=center>
+    <caption>Process Environment Variables</caption>
+    <thead>
+        <th>Key</th>
+        <th>Value</th>
+    </thead>
+    {% for var in procdata["env"].keys() %}
+    <tr>
+        <td>{{ var }}</td>
+        <td>{{ procdata["env"][var] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<span class="addItem">+</span>
+{% endif %}
 
-        updateOutput();
-        var t = setInterval(updateOutput, 5000);
-    </script>
+<table align=center>
+    <caption>
+        Output
+    </caption>
+    <tr>
+        <td id="output">
+        </td>
+    </tr>
+</table>
+
+<script>
+    function httpGet(theUrl) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("GET", theUrl, false); // false for synchronous request
+        xmlHttp.send(null);
+        return xmlHttp.responseText;
+    }
+
+    function updateOutput() {
+        var x = document.getElementById("output");
+        var e = httpGet("/out/{{proc}}");
+        x.innerHTML = e;
+    }
+
+    updateOutput();
+    var t = setInterval(updateOutput, 5000);
+</script>
 {% endblock %}
 
 {% block sidebuttons %}
-    {% if running %}
-        <a href = "/restart/{{proc}}"><img src="/source/restart.svg"/></a>
-        <a href = "/kill/{{proc}}"><img src="/source/kill.svg"></a>
-        {% if paused %}
-            <a href = "/unpause/{{proc}}"><img src="/source/play.svg"></a>
-        {% else %}
-            <a href = "/pause/{{proc}}"><img src="/source/pause.svg"></a>
-        {% endif %}
-    {% else %}
-        <a href = "/start/{{proc}}"><img src="/source/play.svg"/></a>
-    {% endif %}
+{% if running %}
+<a href="/restart/{{proc}}"><img src="/source/restart.svg" /></a>
+<a href="/kill/{{proc}}"><img src="/source/kill.svg"></a>
+{% if paused %}
+<a href="/unpause/{{proc}}"><img src="/source/play.svg"></a>
+{% else %}
+<a href="/pause/{{proc}}"><img src="/source/pause.svg"></a>
+{% endif %}
+{% else %}
+<a href="/start/{{proc}}"><img src="/source/play.svg" /></a>
+{% endif %}
 {% endblock %}
