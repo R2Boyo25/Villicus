@@ -10,9 +10,9 @@ from os import O_NONBLOCK, read
 import signal
 from datetime import datetime
 
-app = Flask('ProgramManager')
-configfile = os.path.expanduser("~/.config/programmanager.toml")
-configdir = os.path.expanduser("~/.config/programmanager/")
+app = Flask('Villicus')
+configfile = os.path.expanduser("~/.config/villicus.toml")
+configdir = os.path.expanduser("~/.config/villicus/")
 
 #### Disable Logging ####
 
@@ -54,11 +54,11 @@ class Proc:
 
     def start(self):
         proc = self.dct
-        if "command" in proc:
-            command = proc["command"]  # .split()
-        else:
+        
+        if "command" not in proc:
             return
-
+        
+        command = proc["command"]
         workdir = proc["workdir"] if "workdir" in proc else os.getcwd()
 
         if "env" in proc:
@@ -103,8 +103,11 @@ class Proc:
 
     @property
     def returncode(self):
-        rt = self.process.returncode
-        return rt if rt else 0
+        try:
+            rt = self.process.returncode
+            return rt if rt else 0
+        except:
+            return 0
 
 
 class Procs:
@@ -121,6 +124,10 @@ class Procs:
 
     def proc(self, name):
         return self.dct[name]
+
+    def killall(self):
+        for process in self.dct.items():
+            process.kill()
 
 
 procs = Procs()
@@ -349,5 +356,9 @@ def returnSourceFile(filename):
 
 
 if __name__ == '__main__':
-    start()
-    app.run(host='0.0.0.0', port=4057)
+    try:
+        start()
+        app.run(host='0.0.0.0', port=4057)
+
+    except KeyboardInterrupt:
+        procs.killall()
