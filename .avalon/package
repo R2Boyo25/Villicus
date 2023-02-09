@@ -1,7 +1,7 @@
 {
     "author": "R2Boyo25",
-    "repo": "ProgMan",
-    "binname": "programman",
+    "repo": "Villicus",
+    "binname": "villicus",
     "installScript": ".avalon/gen.py",
     "mvBinAfterInstallScript": true,
     "toCopy": [

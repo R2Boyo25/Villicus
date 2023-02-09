@@ -5,6 +5,7 @@ import os
 import subprocess
 import logging
 import click
+import sys
 from fcntl import fcntl, F_GETFL, F_SETFL
 from os import O_NONBLOCK, read
 import signal
@@ -127,7 +128,7 @@ class Procs:
 
     def killall(self):
         for process in self.dct.items():
-            process.kill()
+            process[1].kill()
 
 
 procs = Procs()
@@ -349,6 +350,11 @@ def listProcs():
 def procShow(proc):
     return render_template("proc.html", proc=proc, procdata=procs.proc(proc).dct, running=procs.proc(proc).running, paused=procs.proc(proc).paused, returncode=procs.proc(proc).returncode)
 
+def cleanup_processes(signal, frame):
+    procs.killall()
+    sys.exit(0)
+  
+signal.signal(signal.SIGINT, cleanup_processes)
 
 @app.route('/source/<path:filename>')
 def returnSourceFile(filename):
@@ -356,9 +362,5 @@ def returnSourceFile(filename):
 
 
 if __name__ == '__main__':
-    try:
-        start()
-        app.run(host='0.0.0.0', port=4057)
-
-    except KeyboardInterrupt:
-        procs.killall()
+    start()
+    app.run(host='0.0.0.0', port=4057)
