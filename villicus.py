@@ -128,8 +128,11 @@ class Procs:
 
     def killall(self):
         for process in self.dct.items():
-            process[1].kill()
-
+            try:
+                process[1].kill()
+            except AttributeError:
+                pass
+                
 
 procs = Procs()
 
