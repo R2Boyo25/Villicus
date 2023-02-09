@@ -69,14 +69,23 @@ class Proc:
         self.process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                         stderr=subprocess.STDOUT, cwd=workdir, env=self.env, shell=True, preexec_fn=os.setsid)
 
+        if not self.process:
+            return
+        
         flags = fcntl(self.process.stdout, F_GETFL)
         fcntl(self.process.stdout, F_SETFL, flags | O_NONBLOCK)
 
     def kill(self):
+        if not self.process:
+            return
+        
         os.killpg(self.process.pid, signal.SIGTERM)
 
     @property
     def out(self):
+        if not self.process:
+            return ""
+        
         o = ""
         if self.running:
             while True:
@@ -84,11 +93,11 @@ class Proc:
                     o += read(self.process.stdout.fileno(), 4096).decode()
                 except OSError:
                     break
-        else:
-            o += self.process.stdout.read().decode()
+            else:
+                o += self.process.stdout.read().decode()
 
-        if o.strip().strip("\n") != "":
-            self.curout.append(o.strip("\n"))
+                if o.strip().strip("\n") != "":
+                    self.curout.append(o.strip("\n"))
 
         return "\n".join(self.curout)
 
@@ -104,11 +113,11 @@ class Proc:
 
     @property
     def returncode(self):
-        try:
-            rt = self.process.returncode
-            return rt if rt else 0
-        except:
+        if not self.process:
             return 0
+        
+        rt = self.process.returncode
+        return rt if rt else 0
 
 
 class Procs:
