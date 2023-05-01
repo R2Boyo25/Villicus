@@ -1,0 +1,93 @@
+/* The sidebar menu */
+.sidebar {
+    display: flex;
+    height: 100%; /* Full-height: remove this if you want "auto" height */
+    width: 50px; /* Set the width of the sidebar */
+    position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+    z-index: 1; /* Stay on top */
+    top: 0; /* Stay at the top */
+    left: 0;
+    background-color: #111; /* Black */
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.sidebar a {
+    padding: 6px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    background-color: #292929;
+    min-height: 38px;
+    max-height: 50px;
+}
+
+.sidebar a img {
+    height: 44;
+    width: 38;
+}
+
+.sidebar a:hover {
+    background-color: #636363;
+}
+
+.main {
+    margin-left: 50px; /* Same as the width of the sidebar */
+    padding: 0px 10px;
+}
+
+#statusdisplay > div.barsegment {
+    width: 50px;
+    height: 50px;
+    color: white;
+}
+
+#statusdisplay > div.barsegment > div.barcontainer {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#statusdisplay > div.barsegment > div.barcontainer > div.bartext {
+    text-align: center;
+}
+
+.inline {
+    display: inline-block;
+}
+
+body {
+    font-family: arial, sans-serif;
+    background: #EEEEEE;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: relative;
+    z-index: 1;
+    top: -40px;
+    left: 110%;;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent black transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}

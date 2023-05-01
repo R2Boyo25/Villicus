@@ -1,63 +1,37 @@
 <html>
 
 <head>
-    <link href="/source/bar.css" rel="stylesheet" media="screen">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Villicus</title>
-    {% block head %}
-    {% endblock %}
+  <link href="/source/bar.css" rel="stylesheet" media="screen">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+  <title>Villicus</title>
+  {% block head %}
+  {% endblock %}
 </head>
 
 <body>
-    <div class="topbar">
-        <div class="miniBarProgress" style="width: 0%; background-color: darkgreen;" align=center>0%</div>
-        <div class="miniBarProgress" style="width: 0%; background-color: darkorange;" align=center>0%</div>
-        <div class="miniBarProgress" style="width: 100%; background-color: darkred;" align=center>100%</div>
-        <div class="miniBarProgress" style="width: 0%; background-color: rgb(39, 28, 28);" align=center>0%</div>
+  <div class="sidebar">
+    <div id="sidebuttons">
+      <a href="/"><img src="/source/home.svg" /></a>
+      <a href="/list"><img src="/source/details.svg" /></a>
+      <a href="/list/new"><img src="/source/details-add.svg" /></a>
+      <a href="/reload"><img src="/source/reload.svg"></a>
+      {% block sidebuttons %}
+      {% endblock %}
     </div>
-
-    <div class="sidebar">
-        <a href="/"><img src="/source/home.svg" /></a>
-        <a href="/list"><img src="/source/details.svg" /></a>
-        <a href="/list/new"><img src="/source/details-add.svg" /></a>
-        <a href="/reload"><img src="/source/reload.svg"></a>
-        {% block sidebuttons %}
-        {% endblock %}
+    <div id="statusdisplay">
+      
     </div>
+  </div>
 
-    <script>
-        function httpGet(theUrl) {
-            var xmlHttp = new XMLHttpRequest();
-            xmlHttp.open("GET", theUrl, false); // false for synchronous request
-            xmlHttp.send(null);
-            return xmlHttp.responseText;
-        }
+  <script type="module">
+    import { render, StatusBar, html } from '/static/js/bar.mjs'
 
-        function updateBars() {
-            var x = document.getElementsByClassName("miniBarProgress");
-            var i;
+    render(html`<${StatusBar} display="Hewwo" />`, document.querySelector("#statusdisplay"));
+  </script>
 
-            var j = JSON.parse(httpGet("/status"))
-
-            var e = [j.running, j.paused, j.killed, j.done];
-            for (i = 0; i < x.length; i++) {
-                x[i].innerHTML = e[i];
-                x[i].style.width = x[i].innerHTML;
-            }
-        }
-
-        function update() {
-            updateBars();
-        }
-
-        update();
-        var t = setInterval(update, 5000);
-    </script>
-
-    <div class="main">
-        {% block body %}
-        {% endblock %}
-    </div>
+  <div class="main">
+    {% block body %}
+    {% endblock %}
+  </div>
 </body>
-
-</html>

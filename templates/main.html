@@ -4,100 +4,102 @@
 {% endblock %}
 {% block body %}
     <div align = center style="margin-top: 5%;">
-        <div style="min-width:300px; max-width: 500px; height:auto;"><canvas id="memChart"></canvas></div><div style="min-width:300px; max-width: 500px; height:auto;"><canvas id="cpuChart"></canvas></div>
+      <div style="min-width:300px; max-width: 500px; height:auto;"><canvas id="memChart"></canvas></div><div style="min-width:300px; max-width: 500px; height:auto;"><canvas id="cpuChart"></canvas></div>
     </div>
 
     <script>   
-        Chart.overrides['doughnut'].plugins.legend.display = false;
+      Chart.overrides['doughnut'].plugins.legend.display = false;
 
-        const mconfig = {
-            type: 'doughnut',
-            data: {
-                labels: [
-                    "Used",
-                    "Shared",
-                    "Buff/Cache",
-                    "Available",
-                    "Swap Used",
-                    "Swap Free"
-                ],
-                datasets: [
-                    {
-                        backgroundColor: [
-                            '#005C46',
-                            "#009B77",
-                            "#34AC90",
-                            '#00000000',
-                            '#7339ac',
-                            '#7339ac15'
-                        ],
-                        data: [],
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Memory Usage'
-                    }
-                }
-            },
-        };
-        const cconfig = {
-            type: 'doughnut',
-            data: {
-                datasets: [
-                    {
-                        backgroundColor: [
-                            '#263855',
-                            '#00000000'
-                        ],
-                        data: [],
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'CPU Usage'
-                    }
-                }
-            },
-        };
+      const mconfig = {
+          type: 'doughnut',
+          data: {
+              labels: [
+                  "Used",
+                  "Shared",
+                  "Buff/Cache",
+                  "Available",
+                  "Swap Used",
+                  "Swap Free"
+              ],
+              datasets: [
+                  {
+                      backgroundColor: [
+                          '#005C46',
+                          "#009B77",
+                          "#34AC90",
+                          '#00000000',
+                          '#7339ac',
+                          '#7339ac15'
+                      ],
+                      data: [],
+                  }
+              ]
+          },
+          options: {
+              responsive: true,
+              plugins: {
+                  title: {
+                      display: true,
+                      text: 'Memory Usage'
+                  }
+              }
+          },
+      };
+      const cconfig = {
+          type: 'doughnut',
+          data: {
+              datasets: [
+                  {
+                      backgroundColor: [
+                          '#263855',
+                          '#00000000'
+                      ],
+                      data: [],
+                  }
+              ]
+          },
+          options: {
+              responsive: true,
+              plugins: {
+                  title: {
+                      display: true,
+                      text: 'CPU Usage'
+                  }
+              }
+          },
+      };
     </script>
 
-    <script>
-        const memChart = new Chart(
-            document.getElementById('memChart'),
-            mconfig
-        );
-        const cpuChart = new Chart(
-            document.getElementById('cpuChart'),
-            cconfig
-        );
+    <script type="module">
+      import { httpGet } from '/static/js/common.mjs'
+      
+      const memChart = new Chart(
+          document.getElementById('memChart'),
+          mconfig
+      );
+      const cpuChart = new Chart(
+          document.getElementById('cpuChart'),
+          cconfig
+      );
 
-        function updateCharts() {
-            var x = document.getElementsByClassName("miniBarProgress");
-            var i;
+      function updateCharts() {
+          var x = document.getElementsByClassName("miniBarProgress");
+          var i;
 
-            var j = JSON.parse(httpGet("/stats"));
+          var j = JSON.parse(httpGet("/stats"));
 
-            memChart.data.datasets.forEach(dataset => {
-                dataset.data = j[0];
-            });
-            cpuChart.data.datasets.forEach(dataset => {
-                dataset.data = j[1];
-            });
+          memChart.data.datasets.forEach(dataset => {
+              dataset.data = j[0];
+          });
+          cpuChart.data.datasets.forEach(dataset => {
+              dataset.data = j[1];
+          });
 
-            cpuChart.update();
-            memChart.update();
-        }
+          cpuChart.update();
+          memChart.update();
+      }
 
-        updateCharts();
-        var t = setInterval(updateCharts, 1000);
+      updateCharts();
+      var t = setInterval(updateCharts, 1000);
     </script>
 {% endblock %}

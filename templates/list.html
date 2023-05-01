@@ -12,7 +12,10 @@
     {% for proc in procs %}
     <tr>
         <td><a href="/proc/{{proc['process']}}">{{ proc['process'] }}</a></td>
-        <td>{{ ((("Crashed" + " (Code " + str(proc['returncode']) + ")") if proc['returncode'] >= 0 else ("Killed" + " (Code " + str(proc['returncode']) + ")")) if proc['returncode'] else "Exited normally") if not proc['running'] else ("Paused" if proc['paused'] else "Running") }}</td>
+        <td>{{ ((("Crashed" + " (Code " + str(proc['returncode']) +
+        ")") if proc['returncode'] >= 0 else ("Killed" + " (Code " +
+        str(proc['returncode']) + ")")) if proc['returncode'] else
+        "Exited normally") if not proc['running'] else ("Paused" if proc['paused'] else "Running") }}</td>
         <td>
             {% if proc['paused'] %}
             <a href="/unpause/{{proc['process']}}"><img src="/source/play.svg" /></a>
