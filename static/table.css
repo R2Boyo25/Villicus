@@ -1,48 +1,26 @@
 table {
-    font-family: arial, sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
     border-collapse: collapse;
-    width: 90%;
-    margin-top: 50px;
     table-layout: fixed;
+    width: 100%;
+    color: #bdbdbd;
 }
 
-td,
-th {
-    border: 1px solid #b6b5b5;
+td, th {
     text-align: left;
-    padding: 8px;
-    width: 50%;
+    height: 50px;
     word-wrap: break-word;
-    max-height: 70vh;
-}
-
-th {
-    background-color: #f7f7f7;
-}
-
-tr:nth-child(odd) {
-    background-color: #dddddd;
-}
-
-tr:nth-child(even) {
-    background-color: #f3f3f3;
+    font-size: 20pt;
 }
 
 #output {
-    max-width: 90%;
     max-height: 70vh;
     overflow-y: auto;
 }
 
 img {
-    width: 25px;
-    height: 25px
-}
-
-.addItem {
-    margin-right: 5%;
-    margin-left: 5%;
-    width: 90%;
-    text-align: right;
-    display: none;
+    width: 32px;
+    height: 32px;
+    filter: invert(90%) sepia(58%) saturate(4464%) hue-rotate(77deg) brightness(104%) contrast(106%);
+    color-scheme: only light;
 }

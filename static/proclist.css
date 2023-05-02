@@ -1,0 +1,12 @@
+tr:hover {
+    outline: 1px solid rgba(0, 255, 172, 1);
+}
+
+td:nth-child(1) {
+    width: calc(32px * 4 + 50px);
+}
+
+td:nth-child(2) {
+    color: #6f6f6f;
+    font-size: 15pt;
+}

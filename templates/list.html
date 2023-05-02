@@ -1,34 +1,31 @@
 {% extends "bar.html" %}
 {% block head %}
 <link href="/source/table.css" rel="stylesheet" media="screen">
+<link href="/source/proclist.css" rel="stylesheet"/>
 {% endblock %}
 {% block body %}
 <table align=center>
-    <tr>
-        <th>Name</th>
-        <th>Status</th>
-        <th width=auto>Controls</th>
-    </tr>
     {% for proc in procs %}
     <tr>
-        <td><a href="/proc/{{proc['process']}}">{{ proc['process'] }}</a></td>
+        <td>
+            {% if proc['paused'] %}
+            <a href="/unpause/{{proc['process']}}"><img src="/source/svg/play.svg"></a>
+            <a href="/restart/{{proc['process']}}"><img src="/source/svg/restart.svg"></a>
+            <a href="/kill/{{proc['process']}}"><img src="/source/svg/remove.svg"></a>
+            {% elif proc['running'] %}
+            <a href="/restart/{{proc['process']}}"><img src="/source/svg/restart.svg"></a>
+            <a href="/kill/{{proc['process']}}"><img src="/source/svg/remove.svg"></a>
+            <a href="/pause/{{proc['process']}}"><img src="/source/svg/pause.svg"></a>
+            {% else %}
+            <a href="/start/{{proc['process']}}"><img src="/source/svg/play.svg"></a>
+            {% endif %}
+            <a href="/proc/{{proc['process']}}"><img src="/source/svg/details.svg"></a>
+        </td>
         <td>{{ ((("Crashed" + " (Code " + str(proc['returncode']) +
         ")") if proc['returncode'] >= 0 else ("Killed" + " (Code " +
         str(proc['returncode']) + ")")) if proc['returncode'] else
         "Exited normally") if not proc['running'] else ("Paused" if proc['paused'] else "Running") }}</td>
-        <td>
-            {% if proc['paused'] %}
-            <a href="/unpause/{{proc['process']}}"><img src="/source/svg/play.svg" /></a>
-            <a href="/restart/{{proc['process']}}"><img src="/source/svg/restart.svg" /></a>
-            <a href="/kill/{{proc['process']}}"><img src="/source/svg/remove.svg"></a>
-            {% elif proc['running'] %}
-            <a href="/restart/{{proc['process']}}"><img src="/source/svg/restart.svg" /></a>
-            <a href="/kill/{{proc['process']}}"><img src="/source/svg/remove.svg"></a>
-            <a href="/pause/{{proc['process']}}"><img src="/source/svg/pause.svg"></a>
-            {% else %}
-            <a href="/start/{{proc['process']}}"><img src="/source/svg/play.svg" /></a>
-            {% endif %}
-        </td>
+        <td>{{ proc['process'] }}</td>
     </tr>
     {% endfor %}
 </table>

@@ -1,6 +1,7 @@
 {% extends "bar.html" %}
 {% block head %}
 <link href="/source/table.css" rel="stylesheet" media="screen">
+<link href="/source/proc.css" rel="stylesheet"/>
 {% endblock %}
 
 {% block body %}
@@ -19,7 +20,6 @@
     {% endif %}
     {% endfor %}
 </table>
-<span class="addItem">+</span>
 
 {% if not running %}
 <table align=center>
@@ -49,7 +49,6 @@
     </tr>
     {% endfor %}
 </table>
-<span class="addItem">+</span>
 {% endif %}
 
 <table align=center>
