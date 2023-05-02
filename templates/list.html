@@ -18,15 +18,15 @@
         "Exited normally") if not proc['running'] else ("Paused" if proc['paused'] else "Running") }}</td>
         <td>
             {% if proc['paused'] %}
-            <a href="/unpause/{{proc['process']}}"><img src="/source/play.svg" /></a>
-            <a href="/restart/{{proc['process']}}"><img src="/source/restart.svg" /></a>
-            <a href="/kill/{{proc['process']}}"><img src="/source/kill.svg"></a>
+            <a href="/unpause/{{proc['process']}}"><img src="/source/svg/play.svg" /></a>
+            <a href="/restart/{{proc['process']}}"><img src="/source/svg/restart.svg" /></a>
+            <a href="/kill/{{proc['process']}}"><img src="/source/svg/remove.svg"></a>
             {% elif proc['running'] %}
-            <a href="/restart/{{proc['process']}}"><img src="/source/restart.svg" /></a>
-            <a href="/kill/{{proc['process']}}"><img src="/source/kill.svg"></a>
-            <a href="/pause/{{proc['process']}}"><img src="/source/pause.svg"></a>
+            <a href="/restart/{{proc['process']}}"><img src="/source/svg/restart.svg" /></a>
+            <a href="/kill/{{proc['process']}}"><img src="/source/svg/remove.svg"></a>
+            <a href="/pause/{{proc['process']}}"><img src="/source/svg/pause.svg"></a>
             {% else %}
-            <a href="/start/{{proc['process']}}"><img src="/source/play.svg" /></a>
+            <a href="/start/{{proc['process']}}"><img src="/source/svg/play.svg" /></a>
             {% endif %}
         </td>
     </tr>

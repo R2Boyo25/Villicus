@@ -450,4 +450,4 @@ def returnSourceFile(filename):
 
 if __name__ == "__main__":
     start()
-    app.run("0.0.0.0", port=4057)
+    app.run("0.0.0.0", port=4057, debug="--debug" in sys.argv)
