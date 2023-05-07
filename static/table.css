@@ -11,6 +11,11 @@ td, th {
     height: 50px;
     word-wrap: break-word;
     font-size: 20pt;
+    vertical-align: middle;
+}
+
+tr:nth-child(even) {
+    background-color: #0000002f
 }
 
 #output {

@@ -114,10 +114,13 @@ class Proc:
         while 1:
             tmp = self.process.stdout.readline()
             
-            if not tmp and not self.process.poll():
+            if not tmp:
                 break
 
             self.curout.append(tmp.decode().strip("\n"))
+
+            if not self.process.poll():
+                break
 
         return "\n".join(self.curout)
 
@@ -332,9 +335,12 @@ def unpauseProc(proc):
     return redirect("/proc/" + proc)
 
 
+from ansi2html import Ansi2HTMLConverter
+conv = Ansi2HTMLConverter()
+
 @app.route("/out/<proc>")
 def statTest(proc):
-    return str(procs.proc(proc).out).replace("\n", "<br>\n")
+    return conv.convert(str(procs.proc(proc).out))
 
 
 @app.route("/reload")

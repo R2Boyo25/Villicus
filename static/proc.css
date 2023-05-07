@@ -17,8 +17,9 @@ th {
     background-color: #080808;
     padding: 25px;
     border-radius: 25px;
+    font-size: 1.5em;
 }
 
-table {
+table:not(:last-of-type) {
     margin-bottom: 50px;
 }

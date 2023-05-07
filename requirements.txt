@@ -1,3 +1,4 @@
 flask
 toml
 flask_sock
+ansi2html
