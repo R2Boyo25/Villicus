@@ -21,10 +21,23 @@
             {% endif %}
             <a href="/proc/{{proc['process']}}"><img src="/source/svg/details.svg"></a>
         </td>
-        <td>{{ ((("Crashed" + " (Code " + str(proc['returncode']) +
-        ")") if proc['returncode'] >= 0 else ("Killed" + " (Code " +
-        str(proc['returncode']) + ")")) if proc['returncode'] else
-        "Exited normally") if not proc['running'] else ("Paused" if proc['paused'] else "Running") }}</td>
+        <td>
+          {{
+          (
+              (
+                  ("Crashed" + " (Code " + str(proc["returncode"]) + ")")
+                  if proc["returncode"] > 0
+                  else (
+                      "Never Started"
+                      if proc["returncode"] == -111 else 
+                      "Killed" + " (Code " + str(proc["returncode"]) + ")"
+                  )
+              )
+              if proc["returncode"]
+              else "Exited normally"
+          ) if not proc["running"] else ("Paused" if proc["paused"] else "Running")
+          }}
+        </td>
         <td>{{ proc['process'] }}</td>
     </tr>
     {% endfor %}
