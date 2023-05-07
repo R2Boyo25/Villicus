@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2023-05-07
+
+### Changed
+- Remade UI
+- Switched to dark theme
+
+### Added
+- ANSI color code interpreting
+
+### Fixed
+- Freezing after killing a process
+- Only getting one line per request from a killed process
+
 ## [0.1.0] - 2023-02-08
 
 ### Changed
