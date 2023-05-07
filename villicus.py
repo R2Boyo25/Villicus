@@ -57,14 +57,13 @@ class Proc:
         self.env = os.environ.copy()
         self.paused = False
         self.curout = []
-        
+
         if "start" not in self.dct:
             self.start()
             return
-            
+
         if self.dct["start"]:
             self.start()
-            
 
     def start(self):
         proc = self.dct
@@ -113,7 +112,7 @@ class Proc:
 
         while 1:
             tmp = self.process.stdout.readline()
-            
+
             if not tmp:
                 break
 
@@ -129,10 +128,10 @@ class Proc:
         if not self.paused:
             if self.process is not None:
                 return self.process.poll() is None
-            
+
             else:
                 return False
-            
+
         else:
             return True
 
@@ -141,8 +140,8 @@ class Proc:
         if self.process is None:
             return -111
 
-        rt = self.process.returncode
-        return rt if rt is not None else -111
+        returncode = self.process.returncode
+        return returncode if returncode is not None else -111
 
 
 class Procs:
@@ -164,7 +163,7 @@ class Procs:
         for process in self.dct.items():
             try:
                 process[1].kill()
-                
+
             except AttributeError:
                 pass
 
@@ -181,16 +180,16 @@ procs = Procs()
 
 
 def listConfigFiles() -> list:
-    c = []
+    configfiles = []
 
-    for root, dirs, files in os.walk(app.config["configdir"]):
+    for root, _, files in os.walk(app.config["configdir"]):
         for file in files:
             if file.endswith("~") or file.endswith("#"):
                 continue
-            
-            c.append(root.rstrip("/") + "/" + file)
 
-    return c
+            configfiles.append(root.rstrip("/") + "/" + file)
+
+    return configfiles
 
 
 def fname(path) -> str:
@@ -200,29 +199,30 @@ def fname(path) -> str:
 def changed() -> list:
     global LASTUPDATE
 
-    c = []
+    changedfiles = []
 
     for file in listConfigFiles():
         if datetime.fromtimestamp(os.path.getmtime(file)) > LASTUPDATE:
-            c.append(fname(file))
+            changedfiles.append(fname(file))
+            
     LASTUPDATE = datetime.now()
 
-    return c
+    return changedfiles
 
 
 def loadConfig() -> dict:
-    d = {}
+    config = {}
 
-    for f in listConfigFiles():
-        d[fname(f)] = toml.load(f)
+    for filename in listConfigFiles():
+        config[fname(filename)] = toml.load(filename)
 
-    return d
+    return config
 
 
 def saveConfig(newconfig):
-    for k in newconfig.keys():
-        with open(configdir + "/" + k + ".toml", "w") as pf:
-            toml.dump(newconfig[k], pf)
+    for key in newconfig.keys():
+        with open(configdir + "/" + key + ".toml", "w") as configfile:
+            toml.dump(newconfig[key], configfile)
 
 
 def startProcs():
@@ -246,10 +246,8 @@ def start():
         os.mkdir(app.config["configdir"])
 
     if os.path.exists(app.config["configfile"]):
-        with open(app.config["configfile"], "r") as cf:
-            a = toml.load(cf)
-
-        saveConfig(a)
+        with open(app.config["configfile"], "r") as configfile:
+            saveConfig(toml.load(configfile))
 
         os.remove(app.config["configfile"])
 
@@ -259,27 +257,37 @@ def start():
 
 
 def memUsage():
-    aa = subprocess.check_output("free -m".split()).decode().split("\n")
+    outlines = subprocess.check_output("free -m".split()).decode().split("\n")
 
-    a = aa[1]
+    mem = outlines[1]
 
-    while "  " in a:
-        a = a.replace("  ", " ")
+    while "  " in mem:
+        mem = mem.replace("  ", " ")
 
-    ae = a.split()
+    memvals = mem.split()
 
-    af = aa[2]
+    swap = outlines[2]
 
-    while "  " in a:
-        af = af.replace("  ", " ")
+    while "  " in swap:
+        swap = swap.replace("  ", " ")
 
-    af = af.split()
+    swapvals = swap.split()
 
-    return [int(e) for e in [ae[2], ae[4], ae[5], ae[6], af[2], af[3]]]
+    return [
+        int(val)
+        for val in [
+            memvals[2],
+            memvals[4],
+            memvals[5],
+            memvals[6],
+            swapvals[2],
+            swapvals[3],
+        ]
+    ]
 
 
 def cpuUsage():
-    a = (
+    usage = (
         subprocess.check_output(
             ["bash", "-c", "top -b -n1 | grep \"Cpu(s)\" | awk '{print $2+$4}'"]
         )
@@ -287,7 +295,7 @@ def cpuUsage():
         .rstrip("\n")
     )
 
-    return [float(a), 100 - float(a)]
+    return [float(usage), 100 - float(usage)]
 
 
 @app.route("/stats")
@@ -336,7 +344,9 @@ def unpauseProc(proc):
 
 
 from ansi2html import Ansi2HTMLConverter
+
 conv = Ansi2HTMLConverter()
+
 
 @app.route("/out/<proc>")
 def statTest(proc):
