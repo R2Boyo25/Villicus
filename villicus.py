@@ -119,7 +119,7 @@ class Proc:
 
             self.curout.append(tmp.decode().strip("\n"))
 
-            if not self.process.poll():
+            if not self.process.poll() and not tmp:
                 break
 
         return "\n".join(self.curout)
