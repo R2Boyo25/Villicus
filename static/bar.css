@@ -90,3 +90,69 @@ body {
 .tooltip:hover .tooltiptext {
     visibility: visible;
 }
+
+@media (max-width: 650px) {
+    .sidebar {
+        background-color: unset;
+    }
+
+    #statusdisplay {
+        display: flex;
+        pointer-events: all;
+        margin-top: 10px;
+        order: 1;
+    }
+
+    #sidebuttons {
+        display: flex;
+        pointer-events: all;
+        order: 2;
+        background-color: #0000005f;
+        border-radius: 15px;
+        margin-bottom: 10px;
+    }
+
+    .sidebar {
+        width: 100%;
+        align-items: center;
+        pointer-events: none;
+    }
+
+    .main {
+        margin-left: 0px;
+        padding: 50px 0px;
+        padding-bottom: 60px;
+    }
+
+    .tooltip .tooltiptext {
+        width: 120px;
+        bottom: 0%;
+        left: 50%;
+        margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
+    }
+    
+    .tooltip .tooltiptext::after {
+        content: " ";
+        position: absolute;
+        top: 100%; /* At the bottom of the tooltip */
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: black transparent transparent transparent;
+    }
+
+    .barsegment:first-child {
+        border-top-left-radius: 15px;
+        border-bottom-left-radius: 15px;
+    }
+
+    .barsegment:last-child {
+        border-top-right-radius: 15px;
+        border-bottom-right-radius: 15px;
+    }
+
+    #statusdisplay > div.barsegment {
+        height: 40px;
+    }
+}

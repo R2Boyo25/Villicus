@@ -10,3 +10,29 @@ td:nth-child(2) {
     color: #6f6f6f;
     font-size: 15pt;
 }
+
+@media (max-width: 650px) {
+    tr {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    td:nth-child(2) {
+        order: 3;
+    }
+    
+    td:nth-child(1) {
+        order: 2;
+        width: unset;
+    }
+
+    td:nth-child(3) {
+        order: 1;
+        width: 100%;
+    }
+
+    tr:nth-child(even) {
+        background-color: unset;
+    }
+}
