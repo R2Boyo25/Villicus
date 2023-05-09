@@ -10,7 +10,7 @@ td, th {
     text-align: left;
     height: 50px;
     word-wrap: break-word;
-    font-size: 20pt;
+    font-size: 1.5em;
     vertical-align: middle;
 }
 
@@ -28,4 +28,10 @@ img {
     height: 32px;
     filter: invert(90%) sepia(58%) saturate(4464%) hue-rotate(77deg) brightness(104%) contrast(106%);
     color-scheme: only light;
+}
+
+@media (max-width: 600px) {
+    td, th {
+        font-size: 1em;
+    }
 }

@@ -35,4 +35,8 @@ td:nth-child(2) {
     tr:nth-child(even) {
         background-color: unset;
     }
+
+    td {
+        font-size: 1.75em;
+    }
 }
