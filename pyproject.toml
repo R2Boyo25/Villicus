@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "villicus"
+version = "0.3.0"
+description = ""
+authors = ["Kazani <kazani@kazani.dev>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Flask = "^3.0.0"
+toml = "^0.10.2"
+flask-sock = "^0.7.0"
+ansi2html = "^1.8.0"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.7.1"
+pylint = "^3.0.2"
+black = "^23.11.0"
+gunicorn = "^21.2.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
